@@ -12,7 +12,12 @@ define Package/quectel-cm
   CATEGORY:=Network
   SUBMENU:=WWAN
   TITLE:=Qconnect Manager for Quectel WWAN modules
-  DEPENDS:=+kmod-usb-net-qmi-wwan-quectel +kmod-usb-serial-option
+  DEPENDS:= \
+    +kmod-usb-net-cdc-mbim \
+    +kmod-usb-net-qmi-wwan \
+    +kmod-usb-net-qmi-wwan-fibocom \
+    +kmod-usb-net-qmi-wwan-quectel \
+    +kmod-usb-serial-option
 endef
 
 define Package/quectel-cm/install
@@ -24,7 +29,7 @@ define Package/quectel-cm/install
 	$(INSTALL_BIN) ./files/quectel.sh $(1)/lib/netifd/proto/
 
 	$(INSTALL_DIR) $(1)/etc/hotplug.d/net
-	$(INSTALL_BIN) ./files/smp-affinity-pcie-mhi.sh $(1)/etc/hotplug.d/net/21-smp-affinity-pcie-mhi
+	$(INSTALL_BIN) ./files/smp-affinity-mhi-pcie.sh $(1)/etc/hotplug.d/net/21-smp-affinity-mhi-pcie
 	$(INSTALL_BIN) ./files/smp-affinity-qmi-usb.sh $(1)/etc/hotplug.d/net/22-smp-affinity-qmi-usb
 endef
 

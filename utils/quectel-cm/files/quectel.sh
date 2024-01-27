@@ -64,13 +64,6 @@ proto_quectel_setup() {
 		return 1
 	}
 
-	for i in $(seq 1 180); do
-		if [ -e "$devpath/net/$ifname/qmap_mode" ]; then
-			break
-		fi
-		sleep 1
-	done
-
 	[ "$pdptype" = "ip" -o "$pdptype" = "ipv4v6" ] && ipv4opt="-4"
 	[ "$pdptype" = "ipv6" -o "$pdptype" = "ipv4v6" ] && ipv6opt="-6"
 	[ -n "$auth" ] || auth="none"
