@@ -130,5 +130,5 @@ proto_quectel_teardown() {
 }
 
 [ -n "$INCLUDE_ONLY" ] || {
-	modinfo "qmi_wwan_q" &>"/dev/null" && add_protocol quectel
+	add_protocol quectel
 }
