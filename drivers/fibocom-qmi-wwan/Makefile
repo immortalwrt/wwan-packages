@@ -1,7 +1,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=fibocom-qmi-wwan
-PKG_VERSION:=1.0
+PKG_VERSION:=1.0.5
 PKG_RELEASE:=1
 
 include $(INCLUDE_DIR)/kernel.mk
