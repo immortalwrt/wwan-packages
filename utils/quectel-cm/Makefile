@@ -11,7 +11,7 @@ define Package/quectel-cm
   SECTION:=net
   CATEGORY:=Network
   SUBMENU:=WWAN
-  TITLE:=Qconnect Manager for Quectel WWAN modules
+  TITLE:=Qconnector Manager for Quectel WWAN modules
   DEPENDS:= \
     +kmod-usb-net-cdc-mbim \
     +kmod-usb-net-qmi-wwan \
