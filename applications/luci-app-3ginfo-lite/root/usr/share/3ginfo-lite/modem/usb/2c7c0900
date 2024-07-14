@@ -1,7 +1,4 @@
-# Quectel RG500Q-EA
-# Quectel RG502Q-EA
-# Quectel RM500Q-GL
-# Quectel RM502Q-AE
+# Quectel RM500U-CNV
 
 O=$(sms_tool -d $DEVICE at "at+qtemp")
 
@@ -38,18 +35,19 @@ fi
 
 case "$MODE_NUM" in
 	7*)
-		MODE="LTE |"
-		echo "$O" | grep -q -i "+QCAINFO.*SCC" && MODE="LTE_A"
+		if echo "$O" | grep -q -i "+QCAINFO.*SCC"; then
+			MODE="LTE-A |"
+		fi
 		;;
 	11*)
 		MODE="5G SA |"
 		;;
 	13*)
-		MODE="LTE |"
 		if echo "$O" | grep -q -i "+QCAINFO.*NR5G"; then
 			MODE="5G NSA |"
 		else
 			if echo "$O" | grep -q -i "+QCAINFO.*PCC.*LTE"; then
+				MODE="LTE |"
 
 					OTS=$(echo "$O" | awk -F[,:] '/^\+QENG:/ {print $18}' | awk '{printf "%.0f\n", 0.2*$1*10 - 20}')
 					SINR=$OTS
@@ -109,23 +107,6 @@ if [ -n "$T" ]; then
 			esac
 		done
 	fi
-else
-	case "$MODE_NUM" in
-		7 | 13)
-			T=$(echo "$O" | awk -F[,:] '/^\+QNWINFO:.*LTE.*/{print $4}')
-			if [ -n "$T" ]; then
-				B=$(echo $T | sed 's/"LTE BAND \(.*\)"/\1/')
-				MODE="$MODE $(band4g ${B})"
-			fi
-			;;
-		11*)
-			T=$(echo "$O" | awk -F[,:] '/^\+QNWINFO:.*NR5G.*/{print $4}')
-			if [ -n "$T" ]; then
-				B=$(echo $T | sed 's/"NR5G BAND \(.*\)"/\1/')
-				MODE="$MODE $(band5g ${B})"
-			fi
-			;;
-	esac
 fi
 
 if [ "x$MODE_NUM" = "x7" ]; then
@@ -289,6 +270,10 @@ if [ -n "$T" ]; then
 		*"LTE BAND"*)
 			B=$(echo $T | sed 's/"LTE BAND \(.*\)"/\1/')
 			T2=$(band4g ${B})
+			;;
+		*"NR N"*)
+			B=$(echo $T | sed 's/NR N\(.*\)/\1/')
+			T2=$(band5g ${B})
 			;;
 		*"NR5G BAND"*)
 			B=$(echo $T | sed 's/"NR5G BAND \(.*\)"/\1/')
@@ -521,7 +506,7 @@ fi
 # Protocol
 # DRIVER=QMI_WWAN & DRIVER=CDC_MBIM & DRIVER=CDC_ETHER
 PV=$(cat /sys/kernel/debug/usb/devices 2>/dev/null)
-PVCUT=$(echo $PV | awk -F 'Vendor=2c7c ProdID=0800' '{print $2}' | cut -c-1220)
+PVCUT=$(echo $PV | awk -F 'Vendor=2c7c ProdID=0900' '{print $2}' | cut -c-1290)
 if echo "$PVCUT" | grep -q "Driver=qmi_wwan"
 then
     PROTO="qmi"
