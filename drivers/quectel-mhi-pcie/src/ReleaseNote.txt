@@ -1,4 +1,11 @@
 Release Notes
+[V1.3.7]
+Date:   27/03/2024
+enhancement:
+  1. support SDX35's PID/VID
+  2. support IPQ QSDK MHI used with rmnetdata driver
+
+Release Notes
 [V1.3.6]
 Date:   01/08/2023
 enhancement:
