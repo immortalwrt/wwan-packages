@@ -1,6 +1,6 @@
 obj-m += qmi_wwan_q.o
 
-PWD := $(shell pwd)
+DIR := $(shell pwd)
 OUTPUTDIR=/lib/modules/`uname -r`/kernel/drivers/net/usb/
 
 ifeq ($(ARCH),)
@@ -18,17 +18,17 @@ endif
 endif
 endif
 
-ifneq ($(findstring &,${PWD}),)
-$(warning "${PWD}")
+ifneq ($(findstring &,${DIR}),)
+$(warning "${DIR}")
 $(warning "current directory contain special char '&' !")
 $(error "please remove it!")
 endif
 
 default:
-	$(MAKE) ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} -C $(KDIR) M=$(PWD) modules
+	$(MAKE) ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} -C $(KDIR) M=$(DIR) modules
 
 install: default
-	cp $(PWD)/qmi_wwan_q.ko /lib/modules/$(shell uname -r)/kernel/drivers/net/usb/
+	cp $(DIR)/qmi_wwan_q.ko /lib/modules/$(shell uname -r)/kernel/drivers/net/usb/
 	depmod
 
 clean:

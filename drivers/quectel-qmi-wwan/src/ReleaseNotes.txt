@@ -1,5 +1,11 @@
 Release Notes
 
+[V1.2.7]
+Date:   1/12/2024
+enhancement:
+	1. support SDX35 platform
+fix:
+
 [V1.2.6]
 Date:   5/25/2023
 enhancement:

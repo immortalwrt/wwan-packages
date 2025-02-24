@@ -1,13 +1,16 @@
 /*
- * Copyright (c) 2012  Bjørn Mork <bjorn@mork.no>
- *
- * The probing code is heavily inspired by cdc_ether, which is:
- * Copyright (C) 2003-2005 by David Brownell
- * Copyright (C) 2006 by Ole Andre Vadla Ravnas (ActiveSync)
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * version 2 as published by the Free Software Foundation.
+    Copyright (c) Bjørn Mork of author <bjorn@mork.no>
+
+    This program is free software; you can redistribute it and/ormodify it under the terms of the GNU General
+    Public licenseas published byFree Software Foundation; either version 2theof the License,(at your option)
+    any later version.O1
+    This program isdistributed in the hope that it will be useful,but WITHOUT ANY WARRANTY; without even the
+    implied warranty ofOr FITNESS FOR A PARTICULAR PURPOSE.MERCHANTABILITYSee theGNU General Public License
+    for more details.
+    You should have received a copy of the GNU General Public licensealong withthis program; if not, write to
+    the Free SoftwareFoundation, Inc.r51 Franklin Street, Fifth Floor，Boston，MA 02110-1301，USA.
+
+    Based on version modification, the author is Quectel <fae-support@quectel.com>
  */
 
 #include <linux/module.h>
@@ -93,7 +96,7 @@ extern struct rmnet_nss_cb *rmnet_nss_callbacks __rcu __read_mostly;
  * These devices may alternatively/additionally be configured using AT
  * commands on a serial interface
  */
-#define VERSION_NUMBER "V1.2.6"
+#define VERSION_NUMBER "V1.2.9"
 #define QUECTEL_WWAN_VERSION "Quectel_Linux&Android_QMI_WWAN_Driver_"VERSION_NUMBER
 static const char driver_name[] = "qmi_wwan_q";
 
@@ -406,7 +409,7 @@ static void bridge_mode_rx_fixup(sQmiWwanQmap *pQmapDev, struct net_device *net,
 	uint bridge_mode = 0;
 	unsigned char *bridge_mac;
 
-	if (pQmapDev->qmap_mode > 1 || pQmapDev->use_rmnet_usb == 1) {
+	if (pQmapDev->qmap_mode > 1 || ((pQmapDev->use_rmnet_usb == 1) && !one_card_mode)) {
 		struct qmap_priv *priv = netdev_priv(net);
 		bridge_mode = priv->bridge_mode;
 		bridge_mac = priv->bridge_mac;
@@ -805,6 +808,19 @@ static void rmnet_vnd_update_tx_stats(struct net_device *net,
 	net->stats.tx_bytes += tx_bytes;
 #endif
 }
+
+#if (LINUX_VERSION_CODE > KERNEL_VERSION(6,5,0))
+static inline unsigned int u64_stats_fetch_begin_irq(const struct u64_stats_sync *syncp)
+{
+	return u64_stats_fetch_begin(syncp);
+}
+
+static inline bool u64_stats_fetch_retry_irq(const struct u64_stats_sync *syncp,
+					     unsigned int start)
+{
+	return u64_stats_fetch_retry(syncp, start);
+}
+#endif
 
 #if defined(MHI_NETDEV_STATUS64)
 static struct rtnl_link_stats64 *_rmnet_vnd_get_stats64(struct net_device *net, struct rtnl_link_stats64 *stats)
@@ -1999,8 +2015,14 @@ static void ql_net_get_drvinfo(struct net_device *net, struct ethtool_drvinfo *i
 {
 	/* Inherit standard device info */
 	usbnet_get_drvinfo(net, info);
+	/* strlcpy() is deprecated in kernel 6.8.0+, using strscpy instead */
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(6,8,0))
 	strlcpy(info->driver, driver_name, sizeof(info->driver));
 	strlcpy(info->version, VERSION_NUMBER, sizeof(info->version));
+#else
+	strscpy(info->driver, driver_name, sizeof(info->driver));
+	strscpy(info->version, VERSION_NUMBER, sizeof(info->version));
+#endif
 }
 
 static struct ethtool_ops ql_net_ethtool_ops;
@@ -2065,7 +2087,7 @@ static int qmi_wwan_register_subdriver(struct usbnet *dev)
 	atomic_set(&info->pmcount, 0);
 
 	/* register subdriver */
-#if (LINUX_VERSION_CODE > KERNEL_VERSION( 5,12,0 )) //cac6fb015f719104e60b1c68c15ca5b734f57b9c
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION( 5,14,0 )) //cac6fb015f719104e60b1c68c15ca5b734f57b9c
 	subdriver = usb_cdc_wdm_register(info->control, &dev->status->desc,
 					 4096, WWAN_PORT_QMI, &qmi_wwan_cdc_wdm_manage_power);
 #else
@@ -2194,7 +2216,7 @@ static int qmi_wwan_bind(struct usbnet *dev, struct usb_interface *intf)
 			int qmap_size = (dev->driver_info->data)&0xFF;
 			int idProduct = le16_to_cpu(dev->udev->descriptor.idProduct);
 			int lte_a = (idProduct == 0x0306 || idProduct == 0x030B || idProduct == 0x0512 || idProduct == 0x0620 ||
-							idProduct == 0x0800 || idProduct == 0x0801 || idProduct == 0x0122);
+							idProduct == 0x0800 || idProduct == 0x0801 || idProduct == 0x0122 || idProduct == 0x0316);
 
 			if (qmap_size > 4096 || dev->udev->speed >= USB_SPEED_SUPER) { //if meet this requirements, must be LTE-A or 5G
 				lte_a = 1;
@@ -2226,7 +2248,9 @@ static int qmi_wwan_bind(struct usbnet *dev, struct usb_interface *intf)
 				pQmapDev->rmnet_info.size = sizeof(RMNET_INFO);
 				pQmapDev->rmnet_info.rx_urb_size = pQmapDev->qmap_size;
 				pQmapDev->rmnet_info.ep_type = 2; //DATA_EP_TYPE_HSUSB
-				pQmapDev->rmnet_info.iface_id = 4;
+				pQmapDev->rmnet_info.iface_id = 4;//Interface ID
+				if(idProduct == 0x0316)
+					pQmapDev->rmnet_info.iface_id = 3;// SDX35 Interface ID
 				pQmapDev->rmnet_info.qmap_mode = pQmapDev->qmap_mode;
 				pQmapDev->rmnet_info.qmap_version = pQmapDev->qmap_version;
 				pQmapDev->rmnet_info.dl_minimum_padding = 0;
@@ -2523,6 +2547,7 @@ static const struct usb_device_id products[] = {
 	{ QMI_FIXED_RAWIP_INTF(0x2C7C, 0x0296, 4, mdm9x07) },  /* Quectel BG96 */
 	{ QMI_FIXED_RAWIP_INTF(0x2C7C, 0x0435, 4, mdm9x07) },  /* Quectel AG35 */
 	{ QMI_FIXED_RAWIP_INTF(0x2C7C, 0x0620, 4, mdm9x40) },  /* Quectel EG20 */
+	{ QMI_FIXED_RAWIP_INTF(0x2C7C, 0x0316, 3, mdm9x40) },  /* Quectel RG255 */
 	{ QMI_FIXED_RAWIP_INTF(0x2C7C, 0x0800, 4, sdx55) },  /* Quectel RG500 */
 	{ QMI_FIXED_RAWIP_INTF(0x2C7C, 0x0801, 4, sdx55) },  /* Quectel RG520 */
 	{ QMI_FIXED_RAWIP_INTF(0x2C7C, 0x0122, 4, sdx55) },  /* Quectel RG650 */
