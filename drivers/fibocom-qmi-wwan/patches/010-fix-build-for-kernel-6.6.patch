@@ -36,6 +36,9 @@
  
  #ifdef FIBOCOM_BRIDGE_MODE
      priv->bridge_mode = !!(pDev->bridge_mode & BIT(offset_id));
+@@ -1322,1 +1334,1 @@
+-int qma_setting_store(struct device *dev, QMAP_SETTING *qmap_settings, size_t size) {
++static int qma_setting_store(struct device *dev, QMAP_SETTING *qmap_settings, size_t size) {
 @@ -1760,8 +1772,14 @@ static void ql_net_get_drvinfo(struct ne
  {
      /* Inherit standard device info */
