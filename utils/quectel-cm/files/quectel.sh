@@ -66,7 +66,7 @@ proto_quectel_setup() {
 		return 1
 	}
 
-	[ "$pdptype" = "ip" -o "$pdptype" = "ipv4v6" ] && ipv4opt="-4"
+	[ "$pdptype" = "ipv4" -o "$pdptype" = "ipv4v6" ] && ipv4opt="-4"
 	[ "$pdptype" = "ipv6" -o "$pdptype" = "ipv4v6" ] && ipv6opt="-6"
 	[ -n "$auth" ] || auth="none"
 
@@ -105,7 +105,7 @@ proto_quectel_setup() {
 		ubus call network add_dynamic "$(json_dump)"
 	fi
 
-	if [ "$pdptype" = "ip" ] || [ "$pdptype" = "ipv4v6" ]; then
+	if [ "$pdptype" = "ipv4" ] || [ "$pdptype" = "ipv4v6" ]; then
 		json_init
 		json_add_string name "${interface}_4"
 		json_add_string ifname "@$interface"
