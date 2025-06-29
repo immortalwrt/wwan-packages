@@ -99,7 +99,7 @@ return network.registerProtocol('quectel', {
 
 		o = s.taboption('advanced', form.Value, 'delay', _('Modem init timeout'),
 			_('Maximum amount of seconds to wait for the modem to become ready'));
-		o.placeholder = '10';
+		o.placeholder = '20';
 		o.datatype    = 'min(1)';
 
 		o = s.taboption('advanced', form.Value, 'mtu', _('Override MTU'));
