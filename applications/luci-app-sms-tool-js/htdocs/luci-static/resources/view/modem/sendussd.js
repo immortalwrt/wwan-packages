@@ -261,7 +261,7 @@ return view.extend({
 										var code = fields[1];
 									return E('option', { 'value': code }, name ) })
 								)
-							]) 
+							])
 						]),
 						E('div', { 'class': 'cbi-value' }, [
 							E('label', { 'class': 'cbi-value-title' }, [ _('Code to send') ]),

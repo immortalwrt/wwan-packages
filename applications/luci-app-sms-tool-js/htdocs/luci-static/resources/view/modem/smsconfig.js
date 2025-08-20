@@ -34,7 +34,7 @@ return view.extend({
 		s.tab('smstab' , _('SMS Settings'));
 		s.anonymous = true;
 
-		o = s.taboption('smstab' , form.Value, 'readport', _('SMS reading port'), 
+		o = s.taboption('smstab' , form.Value, 'readport', _('SMS reading port'),
 			_('Select one of the available ttyUSBX ports.'));
 		devs.sort((a, b) => a.name > b.name);
 		devs.forEach(dev => o.value('/dev/' + dev.name));
@@ -134,7 +134,7 @@ return view.extend({
 			}
 		};
 
-		o = s.taboption('smstab', form.Value, 'sendport', _('SMS sending port'), 
+		o = s.taboption('smstab', form.Value, 'sendport', _('SMS sending port'),
 			_("Select one of the available ttyUSBX ports."));
 		devs.sort((a, b) => a.name > b.name);
 		devs.forEach(dev => o.value('/dev/' + dev.name));
@@ -164,7 +164,7 @@ return view.extend({
 		o.rmempty = false;
 		o.default = false;
 
-		o = s.taboption('smstab', form.Value, 'delay', _('Message sending delay'), 
+		o = s.taboption('smstab', form.Value, 'delay', _('Message sending delay'),
 			_("[3 - 59] second(s) \
 			<br /><br /><b>Important</b> \
 				<br />Messages are sent without verification and confirmation delivery of the message. \
@@ -202,7 +202,7 @@ return view.extend({
 		s.tab('ussd', _('USSD Codes Settings'));
 		s.anonymous = true;
 
-		o = s.taboption('ussd', form.Value, 'ussdport', _('USSD sending port'), 
+		o = s.taboption('ussd', form.Value, 'ussdport', _('USSD sending port'),
 			_('Select one of the available ttyUSBX ports.'));
 		devs.sort((a, b) => a.name > b.name);
 		devs.forEach(dev => o.value('/dev/' + dev.name));
@@ -241,7 +241,7 @@ return view.extend({
 		s.tab('attab', _('AT Commands Settings'));
 		s.anonymous = true;
 
-		o = s.taboption('attab' , form.Value, 'atport', _('AT commands sending port'), 
+		o = s.taboption('attab' , form.Value, 'atport', _('AT commands sending port'),
 			_('Select one of the available ttyUSBX ports.'));
 		devs.sort((a, b) => a.name > b.name);
 		devs.forEach(dev => o.value('/dev/' + dev.name));

@@ -8,7 +8,7 @@
 
 /*
 	Copyright 2022-2024 Rafał Wabik - IceG - From eko.one.pl forum
-	
+
 	Licensed to the GNU General Public License v3.0.
 */
 
@@ -34,7 +34,7 @@ return view.extend({
 			}
 
 			dom.content(out, [ res.stdout || '', res.stderr || '' ]);
-			
+
 		}).catch(function(err) {
 			ui.addNotification(null, E('p', [ err ]))
 		}).finally(function() {
@@ -111,7 +111,7 @@ return view.extend({
 
 							for (var i = 0; i < xs.length; i++) {
   								(function(i) {
-    									setTimeout(function() { 
+    									setTimeout(function() {
 		    							phone = xs.options[i].value;
 
 									var out = document.querySelector('.smscommand-output');
@@ -122,8 +122,8 @@ return view.extend({
 									res.stdout += (i+1)+_('/')+xs.length+' * '+_('[Bot] Message sent to number:') + ' ' + phone +'\n';
 									res.stdout = res.stdout.replace(/undefined/g, "");
 
-									dom.content(out, [ res.stdout || '' ]);		
-						
+									dom.content(out, [ res.stdout || '' ]);
+
 									}, dx * i);
 
 								})(i);
@@ -187,21 +187,21 @@ return view.extend({
 	else {
 	group = '';
 	}
-	
+
 	if ( sections[0].prefix == '1' )
 		{
 		prefixnum = sections[0].pnumber;
-		
+
 	}
 	if ( sections[0].information == '1' )
 		{
 		ui.addNotification(null, E('p', _('The phone number should be preceded by the country prefix (for Poland it is 48, without +). If the number is 5, 4 or 3 characters, it is treated as.. short and should not be preceded by a country prefix.') ), 'info');
 	}
-		
-	
+
+
 
 		var info = _('User interface for sending messages using sms-tool. More information about the sms-tool on the %seko.one.pl forum%s.').format('<a href="https://eko.one.pl/?p=openwrt-sms_tool" target="_blank">', '</a>');
-	
+
 		return E('div', { 'class': 'cbi-map', 'id': 'map' }, [
 				E('h2', {}, [ _('SMS Messages') ]),
 				E('div', { 'class': 'cbi-map-descr'}, info),
@@ -223,7 +223,7 @@ return view.extend({
 										var code = fields[1];
 									return E('option', { 'value': code }, name ) })
 								)
-							]) 
+							])
 						]),
 						E('div', { 'class': 'cbi-value' }, [
 							E('label', { 'class': 'cbi-value-title' }, [ _('Send to') ]),
@@ -236,7 +236,7 @@ return view.extend({
 								'oninput': "this.value = this.value.replace(/[^0-9.]/g, '');",
 								'data-tooltip': _('Press [Delete] to delete the phone number'),
 								'keydown': function(ev) {
-									 if (ev.keyCode === 46)  
+									 if (ev.keyCode === 46)
 										{
 										var del = document.getElementById('phonenumber');
 											if (del)
@@ -251,10 +251,10 @@ return view.extend({
 												else {
 													ovc.value = '';
 												}
-												
+
 												document.getElementById('phonenumber').focus();
 										}
-								},																													
+								},
 								}),
 							])
 						]),
@@ -270,7 +270,7 @@ return view.extend({
 								'maxlength': '160',
 								'data-tooltip': _('Press [Delete] to delete the content of the message'),
 								'keydown': function(ev) {
-									 if (ev.keyCode === 46)  
+									 if (ev.keyCode === 46)
 										{
 										var del = document.getElementById('smstext');
 											if (del)
@@ -279,7 +279,7 @@ return view.extend({
 												document.getElementById('smstext').focus();
 										}
 								},
-								'keyup': function(ev) {  
+								'keyup': function(ev) {
 										{
 										document.getElementById('counter').innerHTML = (160 - document.getElementById('smstext').value.length);
 
@@ -293,7 +293,7 @@ return view.extend({
         										this.value = this.value.replace(/ż/g, 'z').replace(/Ż/g, 'Z');
         										this.value = this.value.replace(/ź/g, 'z').replace(/Ź/g, 'Z');
 										}
-									}																														
+									}
 								}),
 								E('div', { 'class': 'left' }, [
 								E('br'),

@@ -9,7 +9,7 @@
 
 /*
 	Copyright 2022-2024 Rafał Wabik - IceG - From eko.one.pl forum
-	
+
 	Licensed to the GNU General Public License v3.0.
 */
 
@@ -78,7 +78,7 @@ return view.extend({
 	handleDelete: function(ev) {
 
 		if (document.querySelectorAll('input[name="smsn"]:checked').length == 0){
-		ui.addNotification(null, E('p', _('Please select the message(s) to be deleted')), 'info');   
+		ui.addNotification(null, E('p', _('Please select the message(s) to be deleted')), 'info');
 		}
 		else {
 			if (document.querySelectorAll('input[name="smsn"]:checked').length === document.querySelectorAll('input[name="smsn"]').length) {
@@ -140,19 +140,19 @@ return view.extend({
 								for (var i=0; i < smsnr.length + 2; i++)
 									{
 									(function(i) {
-    									setTimeout(function() { 
+    									setTimeout(function() {
     									smsnr[i] = parseInt(smsnr[i], 10);
 
 									if (!Number.isNaN(smsnr[i]))
 										{
 										fs.exec_direct('/usr/bin/sms_tool', [ '-d' , portDEL , 'delete' , smsnr[i] ]);
-										count_sms();				
+										count_sms();
 										}
 									count_sms();
 									save_count();
 									}, 1500 * i);
 								})(i);
-								count_sms();		
+								count_sms();
 								}
 								var table = document.getElementById("smsTable");
   								var index = 1;
@@ -209,7 +209,7 @@ return view.extend({
 
 		var view = document.getElementById("smssarea");
 		view.innerHTML = '-';
-		
+
 		var sections = uci.sections('sms_tool_js');
 		var led = sections[0].smsled;
 
@@ -247,7 +247,7 @@ return view.extend({
 								if (res2) {
 
  									var table = document.getElementById('smsTable');
-									while (table.rows.length > 1) { table.deleteRow(1); }					
+									while (table.rows.length > 1) { table.deleteRow(1); }
 
 									var start = res2.substring(7);
 									var end = start.substring(0,start.length-2);
@@ -317,7 +317,7 @@ return view.extend({
         													return;
     														}
 														if (this[o.sender].total == o.total && this[o.sender].timestamp == o.timestamp && this[o.sender].sender == o.sender && this[o.sender].part > 0) {
-    														this[o.sender].index += '-' + o.index;    			
+    														this[o.sender].index += '-' + o.index;
 														this[o.sender].content += o.content;}
 														else {
 															this[o.sender] = { index: o.index, sender: o.sender, timestamp: o.timestamp, part: o.part, total: o.total, content: o.content };
@@ -344,7 +344,7 @@ return view.extend({
 																	} else {
  				 													cell3.innerHTML = result[i].sender;
 																	}
-																	
+
   																cell2.innerHTML = result[i].timestamp;
     																cell1.innerHTML = result[i].content.replace(/\s+/g, ' ').trim();
 																aidx.push(result[i].index+'-');
@@ -365,7 +365,7 @@ return view.extend({
 
 									/* No merging messages */
 									if (smsM == "0") {
-									
+
 										/* Sorting messages by delivery time */
 										var sortbyTime = json.sort((function (a, b) { return new Date(b.timestamp) - new Date(a.timestamp) }));
 
@@ -400,9 +400,9 @@ return view.extend({
   											cell2.innerHTML = sortedData[i].timestamp;
     											cell1.innerHTML = sortedData[i].content.replace(/\s+/g, ' ').trim();
 											aidx.push(sortedData[i].index+'-');
-										
+
 											}
-											
+
 											var axx = aidx.toString();
 											axx = axx.replace(/,/g, ' ');
 											axx = axx.replace(/-/g, ' ');
@@ -441,10 +441,10 @@ return view.extend({
 						E('tr', { 'class': 'tr' }, [
 						E('td', { 'class': 'td left', 'width': '33%' }, [ _('Messages store in')]),
 						E('td', { 'class': 'td left', 'id': 'smssarea' }, [ store ]),
-					]),	
+					]),
 						E('tr', { 'class': 'tr' }, [
 						E('td', { 'class': 'td left', 'width': '33%' }, [_('Messages (inbox / maximum)'),]),
-						E('td', { 'class': 'td' }, 
+						E('td', { 'class': 'td' },
 						E('div', {
 							'id': 'msg',
 							'class': 'cbi-progressbar',
@@ -473,7 +473,7 @@ return view.extend({
 
 			E('table', { 'class': 'table' , 'id' : 'smsTable' }, [
 				E('tr', { 'class': 'tr table-titles' }, [
-					E('th', { 'class': 'th checker' }, 
+					E('th', { 'class': 'th checker' },
 					E('input', {
 						'id': 'ch-all',
 						'type': 'checkbox',

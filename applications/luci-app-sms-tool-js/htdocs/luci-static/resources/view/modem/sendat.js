@@ -8,7 +8,7 @@
 
 /*
 	Copyright 2022-2024 Rafał Wabik - IceG - From eko.one.pl forum
-	
+
 	Licensed to the GNU General Public License v3.0.
 */
 
@@ -26,14 +26,14 @@ return view.extend({
 
 			res.stdout = res.stdout?.replace(/^(?=\n)$|^\s*|\s*$|\n\n+/gm, "") || '';
 			res.stderr = res.stderr?.replace(/^(?=\n)$|^\s*|\s*$|\n\n+/gm, "") || '';
-			
+
 			if (res.stdout === undefined || res.stderr === undefined || res.stderr.includes('undefined') || res.stdout.includes('undefined')) {
 				return;
 			}
 			else {
 				dom.content(out, [ res.stdout || '', res.stderr || '' ]);
 			}
-			
+
 		}).catch(function(err) {
 			if (res.stdout === undefined || res.stderr === undefined || res.stderr.includes('undefined') || res.stdout.includes('undefined')) {
 				return;
@@ -108,9 +108,9 @@ return view.extend({
 	},
 
 	render: function (loadResults) {
-	
+
 	var info = _('User interface for sending AT commands using sms-tool. More information about the sms-tool on the %seko.one.pl forum%s.').format('<a href="https://eko.one.pl/?p=openwrt-sms_tool" target="_blank">', '</a>');
-	
+
 		return E('div', { 'class': 'cbi-map', 'id': 'map' }, [
 				E('h2', {}, [ _('AT Commands') ]),
 				E('div', { 'class': 'cbi-map-descr'}, info),
@@ -132,7 +132,7 @@ return view.extend({
 										var code = fields[1];
 									return E('option', { 'value': code }, name ) })
 								)
-							]) 
+							])
 						]),
 						E('div', { 'class': 'cbi-value' }, [
 							E('label', { 'class': 'cbi-value-title' }, [ _('Command to send') ]),
@@ -143,13 +143,13 @@ return view.extend({
 								'id': 'cmdvalue',
 								'data-tooltip': _('Press [Enter] to send the command, press [Delete] to delete the command'),
 								'keydown': function(ev) {
-									 if (ev.keyCode === 13)  
+									 if (ev.keyCode === 13)
 										{
 										var execBtn = document.getElementById('execute');
 											if (execBtn)
 												execBtn.click();
 										}
-									 if (ev.keyCode === 46)  
+									 if (ev.keyCode === 46)
 										{
 										var del = document.getElementById('cmdvalue');
 											if (del)
@@ -157,7 +157,7 @@ return view.extend({
 												ov.value = '';
 												document.getElementById('cmdvalue').focus();
 										}
-								}																														
+								}
 								}),
 							])
 						]),
